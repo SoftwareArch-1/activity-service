@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package sync_with_activity;
+
+service ActivityService {
+  rpc FindOne (ActivityById) returns (Activity);
+  rpc FindMany (FindManyParams) returns (stream Activity);
+}
+
+message FindManyParams {}
+
+message ActivityById {
+  string id = 1;
+}
+
+message Activity {
+  string id = 1;
+  string detail = 2;
+}
