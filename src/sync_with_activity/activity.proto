@@ -40,9 +40,6 @@ message Activity {
   string tag = 9;
   optional string location = 10;
 
-  // for owner or joined users
-  optional repeated string joined_user_ids = 11;
-
-  // for owner only
-  optional repeated string pending_user_ids = 12;
+  repeated string joined_user_ids = 11;
+  repeated string pending_user_ids = 12;
 }
