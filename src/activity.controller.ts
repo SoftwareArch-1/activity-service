@@ -1,15 +1,12 @@
-import { Observable, toArray } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import { prisma } from './prismaClient';
 import {
-  Activity,
   ActivityById,
   CreateActivity,
-  FindManyParams,
 } from './sync_with_activity/activity.proto.interface';
 
 @Controller()
@@ -39,36 +36,26 @@ export class ActivityService {
         targetDate: new Date(target_date_iso_string),
       },
     });
-    return new Observable<typeof act>((observer) => {
-      observer.next(act);
-      observer.complete();
-    });
+    return act;
   }
 
   @GrpcMethod()
-  async findOne(
-    data: ActivityById,
-    metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
-  ) {
+  async findOne(data: ActivityById) {
     const act = await prisma.activity.findUnique({
       where: {
         id: data.id,
       },
     });
-    return new Observable<typeof act>((observer) => {
-      observer.next(act);
-      observer.complete();
-    });
+    return act;
   }
 
   @GrpcMethod()
-  async findMany(data: FindManyParams, metadata: Metadata) {
+  async findMany() {
     const acts = await prisma.activity.findMany();
-    const ob = new Observable<Activity>((observer) => {
+    const ob = new Observable((observer) => {
       acts.map(observer.next);
       observer.complete();
     });
-    return ob.pipe(toArray());
+    return ob;
   }
 }
