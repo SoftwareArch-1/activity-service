@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // when creating a new activity
+  name            String
+  description     String
+  ownerId         String // from user service
+  targetDate      DateTime
+  maxParticipants Int
+  requireLine     Boolean
+  requireDiscord  Boolean
+  tag             String
+  location        String?
+
+  joinedUserIds  String[] // from user service
+  pendingUserIds String[] // from user service
+}

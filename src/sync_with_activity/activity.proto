@@ -15,5 +15,19 @@ message ActivityById {
 
 message Activity {
   string id = 1;
-  string detail = 2;
+  string name = 2;
+  string description = 3;
+  string owner_id = 4;
+  string target_date_iso_string = 5;
+  int32 max_participants = 6;
+  bool require_line = 7;
+  bool require_discord = 8;
+  string tag = 9;
+  optional string location = 10;
+
+  // for owner or joined users
+  optional repeated string joined_user_ids = 11;
+
+  // for owner only
+  optional repeated string pending_user_ids = 12;
 }

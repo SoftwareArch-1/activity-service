@@ -20,7 +20,7 @@ export class ActivityService {
     return new Observable((observer) => {
       observer.next({
         id: data.id,
-        detail: 'test',
+        description: 'test',
       });
       observer.complete();
     });
@@ -31,11 +31,11 @@ export class ActivityService {
     const ob = new Observable<Activity>((observer) => {
       observer.next({
         id: 'id',
-        detail: 'test',
+        description: 'test',
       });
       observer.next({
         id: 'id2',
-        detail: 'test2',
+        description: 'test2',
       });
       observer.complete();
     });
