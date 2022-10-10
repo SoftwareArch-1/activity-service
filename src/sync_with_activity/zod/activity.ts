@@ -2,8 +2,6 @@ import * as z from 'nestjs-zod/z';
 
 export const ActivityModel = z.object({
   id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
   name: z.string(),
   description: z.string(),
   ownerId: z.string(),
