@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Activity {
-  id String @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
 
   // when creating a new activity
   name            String
@@ -24,8 +24,8 @@ model Activity {
   tag             String
   location        String?
 
-  joinedUserIds  String[] @default([]) // from user service
-  pendingUserIds String[] @default([]) // from user service
+  joinedUserIds  String[] // from user service
+  pendingUserIds String[] // from user service
 }
 
 generator zod {
