@@ -36,7 +36,9 @@ export class ActivityService {
   async findMany() {
     const acts = await prisma.activity.findMany();
     const ob = new Observable((observer) => {
-      acts.map(observer.next);
+      acts.map((a) => {
+        observer.next(a);
+      });
       observer.complete();
     });
     return ob;
