@@ -11,12 +11,13 @@ datasource db {
 }
 
 model Activity {
-  id        String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
   // when creating a new activity
   name            String
   description     String
   ownerId         String // from user service
+  /// @z.preprocess((arg) => {if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);}, z.date())
   targetDate      DateTime
   maxParticipants Int
   requireLine     Boolean
@@ -24,7 +25,9 @@ model Activity {
   tag             String
   location        String?
 
+  /// @z.preprocess((val) => val ?? [], z.array(z.string()))
   joinedUserIds  String[] // from user service
+  /// @z.preprocess((val) => val ?? [], z.array(z.string()))
   pendingUserIds String[] // from user service
 }
 
