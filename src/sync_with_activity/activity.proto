@@ -18,7 +18,7 @@ message CreateActivity {
   string name = 1;
   string description = 2;
   string ownerId = 3;
-  string targetDateIsoString = 4;
+  string targetDate = 4;
   int32 maxParticipants = 5;
   bool requireLine = 6;
   bool requireDiscord = 7;
@@ -33,7 +33,7 @@ message Activity {
   string name = 2;
   string description = 3;
   string ownerId = 4;
-  string targetDateIsoString = 5;
+  string targetDate = 5;
   int32 maxParticipants = 6;
   bool requireLine = 7;
   bool requireDiscord = 8;

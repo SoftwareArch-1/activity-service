@@ -16,7 +16,7 @@ export class ActivityService {
     const act = await prisma.activity.create({
       data: {
         ...dto,
-        targetDate: new Date(dto.targetDateIsoString),
+        targetDate: new Date(dto.targetDate),
       },
     });
     return act;
