@@ -13,6 +13,7 @@ async function bootstrap() {
       options: {
         package: 'sync_with_activity', // ['hero', 'hero2']
         protoPath: join(__dirname, './sync_with_activity/activity.proto'), // ['./hero/hero.proto', './hero/hero2.proto']
+        loader: { keepCase: true },
       },
     },
   );
