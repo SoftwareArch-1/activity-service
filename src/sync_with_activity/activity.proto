@@ -17,11 +17,11 @@ message ActivityById {
 message CreateActivity {
   string name = 1;
   string description = 2;
-  string owner_id = 3;
-  string target_date_iso_string = 4;
-  int32 max_participants = 5;
-  bool require_line = 6;
-  bool require_discord = 7;
+  string ownerId = 3;
+  string targetDateIsoString = 4;
+  int32 maxParticipants = 5;
+  bool requireLine = 6;
+  bool requireDiscord = 7;
   string tag = 8;
   optional string location = 9;
 }
@@ -32,14 +32,14 @@ message Activity {
   // the same with `CreateActivity` message
   string name = 2;
   string description = 3;
-  string owner_id = 4;
-  string target_date_iso_string = 5;
-  int32 max_participants = 6;
-  bool require_line = 7;
-  bool require_discord = 8;
+  string ownerId = 4;
+  string targetDateIsoString = 5;
+  int32 maxParticipants = 6;
+  bool requireLine = 7;
+  bool requireDiscord = 8;
   string tag = 9;
   optional string location = 10;
 
-  repeated string joined_user_ids = 11;
-  repeated string pending_user_ids = 12;
+  repeated string joinedUserIds = 11;
+  repeated string pendingUserIds = 12;
 }

@@ -12,28 +12,11 @@ import {
 @Controller()
 export class ActivityService {
   @GrpcMethod()
-  async create({
-    description,
-    location,
-    max_participants,
-    name,
-    owner_id,
-    require_discord,
-    require_line,
-    tag,
-    target_date_iso_string,
-  }: CreateActivity) {
+  async create(dto: CreateActivity) {
     const act = await prisma.activity.create({
       data: {
-        description,
-        location,
-        maxParticipants: max_participants,
-        name,
-        ownerId: owner_id,
-        requireDiscord: require_discord,
-        requireLine: require_line,
-        tag,
-        targetDate: new Date(target_date_iso_string),
+        ...dto,
+        targetDate: new Date(dto.targetDateIsoString),
       },
     });
     return act;

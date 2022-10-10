@@ -18,11 +18,11 @@ export interface ActivityById {
 export const createActivitySchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
-  owner_id: z.string().cuid(),
-  target_date_iso_string: z.string(),
-  max_participants: z.number(),
-  require_line: z.boolean(),
-  require_discord: z.boolean(),
+  ownerId: z.string().cuid(),
+  targetDateIsoString: z.string(),
+  maxParticipants: z.number(),
+  requireLine: z.boolean(),
+  requireDiscord: z.boolean(),
   tag: z.string(),
   location: z.string().nullable(),
 });
