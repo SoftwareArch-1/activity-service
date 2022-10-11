@@ -11,6 +11,7 @@ import {
   FindOwnedActivities,
   JoinActivity,
 } from './sync_with_activity/activity.proto.interface';
+import { acceptJoinResDtoSchema } from './sync_with_activity/dto/acceptJoinRes.dto';
 
 @Controller()
 export class ActivityService {
@@ -135,7 +136,7 @@ export class ActivityService {
       },
     });
 
-    return act;
+    return acceptJoinResDtoSchema.parse(act);
   }
 
   @GrpcMethod()
