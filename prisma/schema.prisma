@@ -10,13 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ActivityUser {
+  id              String     @id @default(cuid()) @map("_id") @db.ObjectId
+  ownedActivities Activity[] @relation("owned")
+
+  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
+  joinedOtherActivityIds  String[]   @db.ObjectId
+  joinedOtherActivities   Activity[] @relation(fields: [joinedOtherActivityIds], references: [id], name: "joined")
+  pendingOtherActivityIds String[]   @db.ObjectId
+  pendingOtherActivities  Activity[] @relation(fields: [pendingOtherActivityIds], references: [id], name: "pending")
+}
+
 model Activity {
-  id String @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id") @db.ObjectId
 
   // when creating a new activity
   name            String
   description     String
-  ownerId         String // from user service
   /// @z.preprocess((arg) => {if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);}, z.date())
   targetDate      DateTime
   maxParticipants Int
@@ -25,10 +35,16 @@ model Activity {
   tag             String
   location        String?
 
+  owner   ActivityUser @relation(fields: [ownerId], references: [id], name: "owned")
+  ownerId String
+
+  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
   /// @z.preprocess((val) => val ?? [], z.array(z.string()))
-  joinedUserIds  String[] // from user service
+  joinedUserIds  String[]       @db.ObjectId
+  joinedUsers    ActivityUser[] @relation(fields: [joinedUserIds], references: [id], name: "joined")
   /// @z.preprocess((val) => val ?? [], z.array(z.string()))
-  pendingUserIds String[] // from user service
+  pendingUserIds String[]       @db.ObjectId
+  pendingUsers   ActivityUser[] @relation(fields: [pendingUserIds], references: [id], name: "pending")
 }
 
 generator zod {
