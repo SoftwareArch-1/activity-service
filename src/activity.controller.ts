@@ -14,12 +14,33 @@ import {
 @Controller()
 export class ActivityService {
   @GrpcMethod()
-  async create(dto: CreateActivity) {
+  async create({ ownerId, targetDate, ...rest }: CreateActivity) {
+    // const u = await prisma.activityUser.findUnique({
+    //   where: {
+    //     id: ownerId,
+    //   },
+    // });
+    // if (!u) {
+    //   await prisma.activityUser.create({
+    //     data: {
+    //       id: ownerId,
+    //     },
+    //   });
+    // }
     const act = await prisma.activity.create({
       data: {
-        ...dto,
-        targetDate: new Date(dto.targetDate),
-        joinedUserIds: [dto.ownerId],
+        ...rest,
+        targetDate: new Date(targetDate),
+        owner: {
+          connect: {
+            id: ownerId,
+          },
+        },
+        joinedUsers: {
+          connect: {
+            id: ownerId,
+          },
+        },
       },
     });
     return act;
