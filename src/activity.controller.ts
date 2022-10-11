@@ -113,8 +113,10 @@ export class ActivityService {
         id: activityId,
       },
       data: {
-        joinedUserIds: {
-          push: joinerId,
+        pendingUsers: {
+          connect: {
+            id: joinerId,
+          },
         },
       },
     });
