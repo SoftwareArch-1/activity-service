@@ -11,7 +11,7 @@ datasource db {
 }
 
 model ActivityUser {
-  id              String     @id @default(cuid()) @map("_id") @db.ObjectId
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
   ownedActivities Activity[] @relation("owned")
 
   // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
@@ -22,7 +22,7 @@ model ActivityUser {
 }
 
 model Activity {
-  id String @id @default(cuid()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   // when creating a new activity
   name            String
@@ -51,9 +51,9 @@ generator zod {
   provider = "nestjs-zod-prisma"
   output   = "../src/sync_with_activity/zod" // (default) the directory where generated zod schemas will be saved
 
-  relationModel = true // (default) Create and export both plain and related models.
+  // relationModel = true // (default) Create and export both plain and related models.
   // relationModel         = "default" // Do not export model without relations.
-  // relationModel         = false // Do not generate related model
+  relationModel = false // Do not generate related model
 
   generateDto = false // (default) Generate DTOs for NestJS
 

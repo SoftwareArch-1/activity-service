@@ -7,6 +7,7 @@ import { prisma } from './prismaClient';
 import {
   ActivityById,
   CreateActivity,
+  FindOwnedActivities,
   JoinActivity,
 } from './sync_with_activity/activity.proto.interface';
 
@@ -22,6 +23,24 @@ export class ActivityService {
       },
     });
     return act;
+  }
+
+  @GrpcMethod()
+  async findOwnedActivities({ ownerId }: FindOwnedActivities) {
+    const acts = await prisma.activityUser.findUnique({
+      where: {
+        id: ownerId,
+      },
+      select: {
+        ownedActivities: true,
+      },
+    });
+
+    if (acts === null) {
+      throw new RpcException('User not found');
+    }
+
+    return acts.ownedActivities; // If this is an empty array, gRPC won't return anything (undefined). This needs to be handle at the gateway.
   }
 
   @GrpcMethod()
