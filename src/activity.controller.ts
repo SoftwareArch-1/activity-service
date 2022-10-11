@@ -48,7 +48,7 @@ export class ActivityService {
 
   @GrpcMethod()
   async findOwnedActivities({ ownerId }: FindOwnedActivities) {
-    const acts = await prisma.activityUser.findUnique({
+    const owner = await prisma.activityUser.findUnique({
       where: {
         id: ownerId,
       },
@@ -57,11 +57,17 @@ export class ActivityService {
       },
     });
 
-    if (acts === null) {
+    if (owner === null) {
       throw new RpcException('User not found');
     }
 
-    return acts.ownedActivities; // If this is an empty array, gRPC won't return anything (undefined). This needs to be handle at the gateway.
+    return new Observable((observer) => {
+      owner.ownedActivities // If this is an empty array, gRPC won't return anything (undefined). This needs to be handle at the gateway.
+        .map((a) => {
+          observer.next(a);
+        });
+      observer.complete();
+    });
   }
 
   @GrpcMethod()
