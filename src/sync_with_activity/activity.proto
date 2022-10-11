@@ -8,8 +8,14 @@ service ActivityService {
   rpc FindMany (FindManyParams) returns (stream Activity);
   rpc Join (JoinActivity) returns (Activity);
   rpc AcceptJoin (AcceptJoin) returns (Activity);
+  rpc DeclineJoin (DeclineJoin) returns (Activity);
   rpc FindOwnedActivities (FindOwnedActivities) returns (stream Activity);
   rpc FindJoinedActivities (FindJoinedActivities) returns (stream Activity);
+}
+
+message DeclineJoin {
+  string activityId = 1;
+  string joinerId = 2;
 }
 
 message FindJoinedActivities {

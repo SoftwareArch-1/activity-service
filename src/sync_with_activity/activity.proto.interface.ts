@@ -10,6 +10,7 @@ export interface ActivityService {
   findOwnedActivities: (data: FindOwnedActivities) => Observable<Activity>;
   findJoinedActivities: (data: FindJoinedActivities) => Observable<Activity>;
   acceptJoin: (data: AcceptJoin) => Observable<Activity>;
+  declineJoin: (data: DeclineJoin) => Observable<Activity>;
 }
 
 export interface FindJoinedActivities {
@@ -20,6 +21,8 @@ export interface AcceptJoin {
   activityId: string;
   joinerId: string;
 }
+
+export type DeclineJoin = AcceptJoin;
 
 export interface FindOwnedActivities {
   ownerId: string;

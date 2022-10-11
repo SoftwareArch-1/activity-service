@@ -8,6 +8,7 @@ import {
   AcceptJoin,
   ActivityById,
   CreateActivity,
+  DeclineJoin,
   FindJoinedActivities,
   FindOwnedActivities,
   JoinActivity,
@@ -172,6 +173,23 @@ export class ActivityService {
     });
 
     return acceptJoinResDtoSchema.parse(act);
+  }
+
+  @GrpcMethod()
+  async declineJoin({ activityId, joinerId }: DeclineJoin) {
+    const act = await prisma.activity.update({
+      where: {
+        id: activityId,
+      },
+      data: {
+        pendingUsers: {
+          disconnect: {
+            id: joinerId,
+          },
+        },
+      },
+    });
+    return act;
   }
 
   @GrpcMethod()
