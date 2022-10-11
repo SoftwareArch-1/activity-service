@@ -18,18 +18,18 @@ import { z } from 'nestjs-zod/z';
 export class ActivityService {
   @GrpcMethod()
   async create({ ownerId, targetDate, ...rest }: CreateActivity) {
-    const u = await prisma.activityUser.findUnique({
-      where: {
-        id: ownerId,
-      },
-    });
-    if (!u) {
-      await prisma.activityUser.create({
-        data: {
-          id: ownerId,
-        },
-      });
-    }
+    // const u = await prisma.activityUser.findUnique({
+    //   where: {
+    //     id: ownerId,
+    //   },
+    // });
+    // if (!u) {
+    //   await prisma.activityUser.create({
+    //     data: {
+    //       id: ownerId,
+    //     },
+    //   });
+    // }
 
     const dateParsed = z
       .preprocess((val) => new Date(val as any), z.date())
@@ -44,13 +44,13 @@ export class ActivityService {
         ...rest,
         targetDate: dateParsed.data,
         owner: {
-          connect: {
-            id: ownerId,
-          },
-        },
-        joinedUsers: {
-          connect: {
-            id: ownerId,
+          connectOrCreate: {
+            create: {
+              id: ownerId,
+            },
+            where: {
+              id: ownerId,
+            },
           },
         },
       },
