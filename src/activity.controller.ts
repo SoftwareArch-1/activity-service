@@ -160,9 +160,17 @@ export class ActivityService {
     if (!act) {
       throw new RpcException('Activity not found');
     }
-
     if (act.joinedUserIds.length >= act.maxParticipants) {
       throw new RpcException('Maximum participants reached');
+    }
+    if (act.pendingUserIds.includes(joinerId)) {
+      throw new RpcException('Joiner already in pending list');
+    }
+    if (act.joinedUserIds.includes(joinerId)) {
+      throw new RpcException('Joiner already joined');
+    }
+    if (act.ownerId === joinerId) {
+      throw new RpcException('Joiner is owner');
     }
 
     act = await prisma.activity.update({
