@@ -6,6 +6,12 @@ service ActivityService {
   rpc Create (CreateActivity) returns (Activity);
   rpc FindOne (ActivityById) returns (Activity);
   rpc FindMany (FindManyParams) returns (stream Activity);
+  rpc Join (JoinActivity) returns (Activity);
+}
+
+message JoinActivity {
+  string activityId = 1;
+  string joinerId = 2;
 }
 
 message FindManyParams {}

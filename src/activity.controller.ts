@@ -1,12 +1,13 @@
 import { Observable } from 'rxjs';
 
 import { Controller } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { GrpcMethod, RpcException } from '@nestjs/microservices';
 
 import { prisma } from './prismaClient';
 import {
   ActivityById,
   CreateActivity,
+  JoinActivity,
 } from './sync_with_activity/activity.proto.interface';
 
 @Controller()
@@ -17,6 +18,7 @@ export class ActivityService {
       data: {
         ...dto,
         targetDate: new Date(dto.targetDate),
+        joinedUserIds: [dto.ownerId],
       },
     });
     return act;
@@ -42,5 +44,35 @@ export class ActivityService {
       observer.complete();
     });
     return ob;
+  }
+
+  @GrpcMethod()
+  async join({ activityId, joinerId }: JoinActivity) {
+    let act = await prisma.activity.findUnique({
+      where: {
+        id: activityId,
+      },
+    });
+
+    if (!act) {
+      throw new RpcException('Activity not found');
+    }
+
+    if (act.joinedUserIds.length >= act.maxParticipants) {
+      throw new RpcException('Maximum participants reached');
+    }
+
+    act = await prisma.activity.update({
+      where: {
+        id: activityId,
+      },
+      data: {
+        joinedUserIds: {
+          push: joinerId,
+        },
+      },
+    });
+
+    return act;
   }
 }

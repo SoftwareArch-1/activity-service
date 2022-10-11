@@ -6,6 +6,12 @@ export interface ActivityService {
   create: (data: CreateActivity) => Observable<Activity>;
   findOne: (data: ActivityById) => Observable<Activity>;
   findMany(data: FindManyParams): Observable<Activity>;
+  join: (data: JoinActivity) => Observable<Activity>;
+}
+
+export interface JoinActivity {
+  activityId: string;
+  joinerId: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
