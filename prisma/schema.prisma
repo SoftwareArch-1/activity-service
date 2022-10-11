@@ -11,7 +11,7 @@ datasource db {
 }
 
 model ActivityUser {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  id              String     @id @map("_id") // id from user service
   ownedActivities Activity[] @relation("owned")
 
   // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
@@ -40,10 +40,10 @@ model Activity {
 
   // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
   /// @z.preprocess((val) => val ?? [], z.array(z.string()))
-  joinedUserIds  String[]       @db.ObjectId
+  joinedUserIds  String[]
   joinedUsers    ActivityUser[] @relation(fields: [joinedUserIds], references: [id], name: "joined")
   /// @z.preprocess((val) => val ?? [], z.array(z.string()))
-  pendingUserIds String[]       @db.ObjectId
+  pendingUserIds String[]
   pendingUsers   ActivityUser[] @relation(fields: [pendingUserIds], references: [id], name: "pending")
 }
 

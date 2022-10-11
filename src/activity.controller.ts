@@ -12,27 +12,37 @@ import {
   JoinActivity,
 } from './sync_with_activity/activity.proto.interface';
 import { acceptJoinResDtoSchema } from './sync_with_activity/dto/acceptJoinRes.dto';
+import { z } from 'nestjs-zod/z';
 
 @Controller()
 export class ActivityService {
   @GrpcMethod()
   async create({ ownerId, targetDate, ...rest }: CreateActivity) {
-    // const u = await prisma.activityUser.findUnique({
-    //   where: {
-    //     id: ownerId,
-    //   },
-    // });
-    // if (!u) {
-    //   await prisma.activityUser.create({
-    //     data: {
-    //       id: ownerId,
-    //     },
-    //   });
-    // }
+    const u = await prisma.activityUser.findUnique({
+      where: {
+        id: ownerId,
+      },
+    });
+    if (!u) {
+      await prisma.activityUser.create({
+        data: {
+          id: ownerId,
+        },
+      });
+    }
+
+    const dateParsed = z
+      .preprocess((val) => new Date(val as any), z.date())
+      .safeParse(targetDate);
+
+    if (!dateParsed.success) {
+      throw new RpcException('Invalid ISO date string, got ' + targetDate);
+    }
+
     const act = await prisma.activity.create({
       data: {
         ...rest,
-        targetDate: new Date(targetDate),
+        targetDate: dateParsed.data,
         owner: {
           connect: {
             id: ownerId,
