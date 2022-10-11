@@ -5,6 +5,7 @@ import { GrpcMethod, RpcException } from '@nestjs/microservices';
 
 import { prisma } from './prismaClient';
 import {
+  AcceptJoin,
   ActivityById,
   CreateActivity,
   FindOwnedActivities,
@@ -90,6 +91,51 @@ export class ActivityService {
       observer.complete();
     });
     return ob;
+  }
+
+  @GrpcMethod()
+  async acceptJoin({ activityId, joinerId }: AcceptJoin) {
+    let act = await prisma.activity.findUnique({
+      where: {
+        id: activityId,
+      },
+    });
+
+    if (!act) {
+      throw new RpcException('Activity not found');
+    }
+    if (act.joinedUserIds.length >= act.maxParticipants) {
+      throw new RpcException('Maximum participants reached');
+    }
+    if (!act.pendingUserIds.includes(joinerId)) {
+      throw new RpcException('Joiner not in pending list');
+    }
+    if (act.joinedUserIds.includes(joinerId)) {
+      throw new RpcException('Joiner already joined');
+    }
+    if (act.ownerId === joinerId) {
+      throw new RpcException('Joiner is owner');
+    }
+
+    act = await prisma.activity.update({
+      where: {
+        id: activityId,
+      },
+      data: {
+        pendingUsers: {
+          disconnect: {
+            id: joinerId,
+          },
+        },
+        joinedUsers: {
+          connect: {
+            id: joinerId,
+          },
+        },
+      },
+    });
+
+    return act;
   }
 
   @GrpcMethod()
