@@ -8,6 +8,7 @@ import {
   AcceptJoin,
   ActivityById,
   CreateActivity,
+  FindJoinedActivities,
   FindOwnedActivities,
   JoinActivity,
 } from './sync_with_activity/activity.proto.interface';
@@ -75,6 +76,30 @@ export class ActivityService {
 
     return new Observable((observer) => {
       owner.ownedActivities // If this is an empty array, gRPC won't return anything (undefined). This needs to be handle at the gateway.
+        .map((a) => {
+          observer.next(a);
+        });
+      observer.complete();
+    });
+  }
+
+  @GrpcMethod()
+  async findJoinedActivities({ joinerId }: FindJoinedActivities) {
+    const joiner = await prisma.activityUser.findUnique({
+      where: {
+        id: joinerId,
+      },
+      select: {
+        joinedOtherActivities: true,
+      },
+    });
+
+    if (joiner === null) {
+      throw new RpcException('User not found');
+    }
+
+    return new Observable((observer) => {
+      joiner.joinedOtherActivities // If this is an empty array, gRPC won't return anything (undefined). This needs to be handle at the gateway.
         .map((a) => {
           observer.next(a);
         });

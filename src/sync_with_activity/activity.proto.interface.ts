@@ -8,7 +8,12 @@ export interface ActivityService {
   findMany(data: FindManyParams): Observable<Activity>;
   join: (data: JoinActivity) => Observable<Activity>;
   findOwnedActivities: (data: FindOwnedActivities) => Observable<Activity>;
+  findJoinedActivities: (data: FindJoinedActivities) => Observable<Activity>;
   acceptJoin: (data: AcceptJoin) => Observable<Activity>;
+}
+
+export interface FindJoinedActivities {
+  joinerId: string;
 }
 
 export interface AcceptJoin {

@@ -9,6 +9,11 @@ service ActivityService {
   rpc Join (JoinActivity) returns (Activity);
   rpc AcceptJoin (AcceptJoin) returns (Activity);
   rpc FindOwnedActivities (FindOwnedActivities) returns (stream Activity);
+  rpc FindJoinedActivities (FindJoinedActivities) returns (stream Activity);
+}
+
+message FindJoinedActivities {
+  string joinerId = 1;
 }
 
 message AcceptJoin {
