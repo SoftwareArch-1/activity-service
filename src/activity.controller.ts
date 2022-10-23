@@ -215,15 +215,19 @@ export class ActivityService {
     if (act.ownerId === joinerId) {
       throw new RpcException('Joiner is owner');
     }
-
     act = await prisma.activity.update({
       where: {
         id: activityId,
       },
       data: {
         pendingUsers: {
-          connect: {
-            id: joinerId,
+          connectOrCreate: {
+            where: {
+              id: joinerId,
+            },
+            create: {
+              id: joinerId,
+            },
           },
         },
       },
